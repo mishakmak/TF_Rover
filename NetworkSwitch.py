@@ -102,6 +102,38 @@ def Alex1(network):
 
 
 
+
+
+########################################################
+def Alex1CS(network):
+        
+    network = conv_2d(network, 96, 11, strides=4, activation='relu')
+    network = max_pool_2d(network, 3, strides=2)
+    network = local_response_normalization(network)
+    network = conv_2d(network, 256, 5, activation='relu')
+    network = max_pool_2d(network, 3, strides=2)
+    network = local_response_normalization(network)
+    network = conv_2d(network, 384, 3, activation='relu')
+    network = conv_2d(network, 384, 3, activation='relu')
+    network = conv_2d(network, 256, 3, activation='relu')
+    network = max_pool_2d(network, 3, strides=2)
+    network = local_response_normalization(network)
+    
+    network = network.flatten()
+    randarray = np.random.randn((network.shape, network.shape//20))
+    network = tf.matmul(network, randarray)
+    
+    network = fully_connected(network, 4096, activation='tanh')
+    network = dropout(network, drop_prob)
+    network = fully_connected(network, 4096, activation='tanh')
+    network = dropout(network, drop_prob)
+    
+    network = fully_connected(network, 4, activation='softmax')
+    
+    return network
+
+
+
 ########################################################
 def VGG1(network):
         
@@ -545,6 +577,7 @@ modelswitch = {
     14 : X3,
     15: ResNet34,
     16: ResNeXt34,
+    17: Alex1CS,
 }
 
 
